@@ -1,8 +1,9 @@
 import httplib2
 import ntpath
 import urllib
+import os
 
-def getFile(url, filePath):
+def getFile(url, filePath, savePath):
     '''
     GET запрос
     '''
@@ -18,10 +19,13 @@ def getFile(url, filePath):
         return
     if (resp_headers.status == 200):
         filename = ntpath.basename(filePath)
-        f = open("./saved/{}".format(filename), "wb")
+        if (not os.path.exists(savePath)):
+            print("Can't save file. Directory [{}] does not exists.". format(ntpath.abspath(savePath)))
+            return
+        f = open(savePath + "\\" + filename, "wb")
         f.write(content)
         f.close()   
-        print("Saved: [{}]".format(ntpath.abspath("./saved/{}".format(filename))))
+        print("Saved: [{}]".format(ntpath.abspath(savePath + "\\" + filename)))
     elif(resp_headers.status == 404):
         print("Error! Bad request. File does not exists")
     else:
@@ -46,7 +50,7 @@ def createFile(url, filename, contents):
     if (resp_headers.status == 200):
         print("Sucсess")
     else:
-        print("Error. File did not created")
+        print("Error. File was not created")
 
 
 def appendToFile(url, filename, contents):
@@ -67,7 +71,7 @@ def appendToFile(url, filename, contents):
     if (resp_headers.status == 200):
         print("Sucсess.")
     else:
-        print("Error. File did not appended")
+        print("Error. File was not appended")
 
 
 def deleteFile(url, filename):
@@ -87,7 +91,7 @@ def deleteFile(url, filename):
     if (resp_headers.status == 200):
         print("Deleted.")
     else:
-        print("Error. File did not deleted")
+        print("Error. File was not deleted")
 
 def moveFile(url, filename, destFolder):
     '''
@@ -108,7 +112,7 @@ def moveFile(url, filename, destFolder):
     if (resp_headers.status == 200):
         print("Moved.")
     else:
-        print("Error. File did not moved")
+        print("Error. File was not moved")
 
 def copyFile(url, filename, destFolder):
     '''
@@ -128,7 +132,7 @@ def copyFile(url, filename, destFolder):
     if (resp_headers.status == 200):
         print("Copied.")
     else:
-        print("Error. File did not copied")
+        print("Error. File was not copied")
 
 
 
@@ -145,7 +149,9 @@ def main():
         if (choose == 1):
             print("Please, enter file path relatived server work folder")
             path = input()
-            getFile(url, path)
+            print("Please, enter folder to save file")
+            savePath = input()
+            getFile(url, path, savePath)
         elif(choose == 2):
             print("Please, enter filename relatived server work folder:")
             filename = input()
