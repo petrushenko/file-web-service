@@ -86,7 +86,7 @@ namespace WebService
             }
             else
             {
-                throw new Exception("Bad server folder");
+                throw new Exception("Server folder does not exists. [" + workingFolder + "]");
             }
         }
 
@@ -96,8 +96,6 @@ namespace WebService
             Listener.Start();
             IsActive = true;
             Thread thread = new Thread(WaitConnections);
-            //try
-            //ClientWorkDelegate clientWork = new ClientWorkDelegate(ClientWork);
             thread.Start(clientWork);
         }
 
@@ -109,7 +107,6 @@ namespace WebService
             {
                 TcpClient client = Listener.AcceptTcpClient();
                 Console.WriteLine("New connection!");
-                //try
                 Thread thread = new Thread(clientWork.Invoke);
                 thread.Start(client);
             }
