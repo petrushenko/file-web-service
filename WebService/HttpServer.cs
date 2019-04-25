@@ -31,8 +31,15 @@ namespace WebService
             byte[] buffer = Encoding.ASCII.GetBytes(response);
 
             NetworkStream clientStream = client.GetStream();
-
-            clientStream.Write(buffer, 0, buffer.Length);
+            try
+            {
+                clientStream.Write(buffer, 0, buffer.Length);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Can't send responce to client. Connection lost.");
+            }
+            
 
             clientStream.Dispose();
 
@@ -135,9 +142,13 @@ namespace WebService
             NetworkStream clientStream = client.GetStream();
             string headers = "HTTP/1.1 200 OK\nContent-Type: " + contentType + "\nContent-Length: " + contentLength + "\n\n";
             byte[] headersBuffer = Encoding.UTF8.GetBytes(headers);
-            if (client.Connected)
+            try
             {
                 clientStream.Write(headersBuffer, 0, headersBuffer.Length);
+            }
+            catch
+            {
+                Console.WriteLine("Can't send responce to cloent. Connection lost.");
             }
         }
 
@@ -202,7 +213,15 @@ namespace WebService
             while (fs.Position < fs.Length)
             {
                 fs.Read(buffer, 0, buffer.Length);
-                clientStream.Write(buffer, 0, buffer.Length);
+                try
+                {
+                    clientStream.Write(buffer, 0, buffer.Length);
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Can't send responce to client. Connection lost.");
+                }
+                
             }
             fs.Close();
         }

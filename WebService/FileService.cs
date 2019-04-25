@@ -37,7 +37,15 @@ namespace WebService
             while (fs.Position < fs.Length)
             {
                 fs.Read(buffer, 0, buffer.Length);
-                clientStream.Write(buffer, 0, buffer.Length);
+                try
+                {
+
+                    clientStream.Write(buffer, 0, buffer.Length);
+                }
+                catch
+                {
+                    Console.WriteLine("Can't send responce to client. Connection lost.");
+                }
             }
             fs.Close();
         }
